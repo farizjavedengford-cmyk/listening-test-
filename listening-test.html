@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ENGFORD THE HOUSE OF IELTS - Listening Mock Test</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Ethnocentric&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; }
+    .ethnocentric { font-family: 'Ethnocentric', sans-serif; }
+    .section-tab { transition: all 0.3s; }
+    .audio-player { background: #f8fafc; border-radius: 8px; padding: 1rem; margin-bottom: 1.5rem; width: 100%; }
+    .question-input {
+      border-bottom: 2px solid #e5e7eb;
+      outline: none;
+      width: 320px;
+      font-size: 1.1rem;
+      padding: 4px 0;
+      text-align: center;
+    }
+    .question-input:focus { border-color: #3b82f6; }
+    .feedback { margin-left: 12px; font-size: 1.5rem; }
+    .notebook {
+      background: #fffef0;
+      border: 2px solid #d4a373;
+      border-radius: 8px;
+      padding: 2rem;
+      position: relative;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      font-family: 'Courier New', monospace;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+  <!-- Header -->
+  <header class="bg-blue-900 text-white py-4 shadow-lg">
+    <div class="max-w-6xl mx-auto px-6 flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <i class="fa-solid fa-book-open text-4xl"></i>
+        <div class="flex flex-col">
+          <h1 class="text-[35px] leading-none font-bold ethnocentric tracking-widest">ENGFORD</h1>
+          <p class="text-[15.5px] leading-none font-bold ethnocentric text-blue-100 tracking-widest -mt-1">THE HOUSE OF IELTS</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-6">
+        <div id="header-student-name" class="font-medium"></div>
+        <button onclick="logOut()" class="bg-red-600 hover:bg-red-700 px-5 py-2 rounded-lg font-medium flex items-center gap-2">
+          <i class="fa-solid fa-right-from-bracket"></i> Log Out
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- LOGIN PAGE -->
+  <div id="login-page" class="max-w-md mx-auto mt-20 bg-white rounded-2xl shadow-xl p-10">
+    <h2 class="text-3xl font-bold text-center mb-8 text-blue-900">Welcome to ENGFORD<br><span class="text-2xl">THE HOUSE OF IELTS</span></h2>
+    <div class="mb-6">
+      <label class="block text-gray-700 mb-2 font-medium">Password</label>
+      <input id="password" type="password" class="w-full px-4 py-3 border rounded-lg focus:outline-none focus:border-blue-600" placeholder="Enter password"/>
+    </div>
+    <button onclick="handleLogin()" class="w-full bg-blue-900 hover:bg-blue-800 text-white py-3.5 rounded-lg font-semibold text-lg">Login</button>
+    <p class="text-center text-sm text-gray-500 mt-6">Student: <strong>student123</strong><br>Teacher: <strong>admin123</strong></p>
+  </div>
+
+  <!-- STUDENT INFO PAGE -->
+  <div id="student-info-page" class="hidden max-w-2xl mx-auto mt-12 bg-white rounded-2xl shadow-xl p-10">
+    <h2 class="text-3xl font-bold text-center mb-8">Student Information</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div><label class="block text-gray-700 mb-2">Full Name <span class="text-red-500">*</span></label><input id="full-name" type="text" required class="w-full px-4 py-3 border rounded-lg"/></div>
+      <div><label class="block text-gray-700 mb-2">Father's Name</label><input id="father-name" type="text" class="w-full px-4 py-3 border rounded-lg"/></div>
+      <div><label class="block text-gray-700 mb-2">Age</label><input id="age" type="number" class="w-full px-4 py-3 border rounded-lg"/></div>
+      <div><label class="block text-gray-700 mb-2">NIC Number</label><input id="nic" type="text" class="w-full px-4 py-3 border rounded-lg"/></div>
+    </div>
+    <button type="button" onclick="startTest()" class="mt-10 w-full bg-green-600 hover:bg-green-700 text-white py-4 rounded-lg font-bold text-xl">Start Listening Test</button>
+  </div>
+
+  <!-- TEST PAGE -->
+  <div id="test-page" class="hidden max-w-6xl mx-auto mt-8 px-6 pb-12">
+    <div class="bg-white rounded-2xl shadow-xl p-8">
+      <div class="flex justify-between items-center mb-8 border-b pb-4">
+        <h2 class="text-3xl font-bold text-blue-900">IELTS Listening Mock Test</h2>
+        <div class="text-right">
+          <p id="test-student-name" class="font-semibold"></p>
+        </div>
+      </div>
+
+      <div class="flex border-b mb-6 overflow-x-auto">
+        <button onclick="switchSection(1)" class="section-tab flex-1 py-3 font-medium" id="tab-1">Section 1</button>
+        <button onclick="switchSection(2)" class="section-tab flex-1 py-3 font-medium" id="tab-2">Section 2</button>
+        <button onclick="switchSection(3)" class="section-tab flex-1 py-3 font-medium" id="tab-3">Section 3</button>
+        <button onclick="switchSection(4)" class="section-tab flex-1 py-3 font-medium" id="tab-4">Section 4</button>
+      </div>
+
+      <div id="section-content"></div>
+
+      <div class="mt-10 flex justify-between">
+        <button onclick="previousSection()" class="px-8 py-3 border rounded-lg font-medium">Previous</button>
+        <button onclick="nextSection()" class="px-8 py-3 bg-blue-900 text-white rounded-lg font-medium">Next Section</button>
+      </div>
+    </div>
+
+    <div class="text-center mt-8">
+      <button onclick="submitTest()" class="bg-red-600 hover:bg-red-700 text-white px-12 py-4 rounded-xl font-bold text-xl">Submit Test & Get Results</button>
+    </div>
+  </div>
+
+  <!-- RESULTS PAGE -->
+  <div id="results-page" class="hidden max-w-4xl mx-auto mt-12 p-10 bg-white rounded-2xl shadow-2xl">
+    <div class="text-center mb-10">
+      <div class="flex flex-col items-center leading-none">
+        <h1 class="text-[42px] font-bold ethnocentric tracking-widest">ENGFORD</h1>
+        <p class="text-[20.5px] font-bold ethnocentric text-blue-900 tracking-widest -mt-1">THE HOUSE OF IELTS</p>
+      </div>
+      <p class="text-xl text-gray-700 mt-6">Listening Practice Test - Results</p>
+      <p class="text-sm text-gray-500 mt-1" id="result-date"></p>
+    </div>
+    <div class="bg-blue-50 p-8 rounded-xl mb-8">
+      <h2 class="text-3xl font-bold text-center mb-6" id="result-student-name"></h2>
+      <div class="text-center">
+        <p class="text-5xl font-extrabold text-blue-900 mb-2" id="result-score">0/40</p>
+        <p class="text-2xl font-semibold" id="result-band">Band 0.0</p>
+      </div>
+    </div>
+    <div class="flex justify-center gap-6">
+      <button onclick="logOut()" class="bg-blue-600 hover:bg-blue-700 text-white px-10 py-4 rounded-xl font-bold text-lg flex items-center gap-2">
+        <i class="fa-solid fa-rotate-left"></i> Retake Test
+      </button>
+      <button onclick="window.print()" class="bg-green-600 hover:bg-green-700 text-white px-10 py-4 rounded-xl font-bold text-lg flex items-center gap-2">
+        <i class="fa-solid fa-print"></i> Print Results
+      </button>
+    </div>
+  </div>
+
+  <script>
+    let currentUser = null;
+    let currentSection = 1;
+    let answers = {};
+
+    const testData = {
+      1: {
+        title: "SECTION 1",
+        audio: "https://practicepteonline.com/wp-content/uploads/audio/171_we.mp3",
+        html: `
+          <h3 class="text-2xl font-semibold mb-4">Questions 1-13</h3>
+          <p class="text-gray-600 mb-6">Complete the form and notes below. Write <strong>NO MORE THAN THREE WORDS AND/OR A NUMBER</strong> for each answer.</p>
+          <div class="bg-gray-50 p-6 rounded-lg border border-gray-300 max-w-2xl mx-auto mb-10">
+            <h4 class="font-bold text-lg mb-4 text-center">PERSONAL DETAILS FORM</h4>
+            <div class="space-y-6 text-lg">
+              <div>Name: Mary <input data-q="1" class="question-input" placeholder="(1) ........................................"/></div>
+              <div>Address: Flat 2, <input data-q="2" class="question-input" placeholder="(2)"/> <input data-q="3" class="question-input" placeholder="(3)"/> Road, Canterbury</div>
+              <div>Telephone: <input data-q="4" class="question-input" placeholder="(4) ............................................................."/></div>
+              <div>Estimated value of lost item: £<input data-q="5" class="question-input" placeholder="(5) ............................................................."/></div>
+            </div>
+          </div>
+          <div class="notebook mx-auto max-w-3xl p-10">
+            <div class="space-y-8 text-lg">
+              <p>The Government plans to give (6) $<input data-q="6" class="question-input" placeholder="(6) ........................................"/> to assist the farmers. This money was to be spent on improving Sydney’s <input data-q="7" class="question-input" placeholder="(7) ........................................"/> but has now been re-allocated.</p>
+              <p>Farmers say that the money will not help them because it is <input data-q="8" class="question-input" placeholder="(8) ........................................"/>.</p>
+              <p>An aeroplane which was carrying a group of <input data-q="9" class="question-input" placeholder="(9) ........................................"/> was forced to land just <input data-q="10" class="question-input" placeholder="(10)"/> minutes after take-off.</p>
+              <p>The passengers were rescued by <input data-q="11" class="question-input" placeholder="(11) ........................................"/>.</p>
+              <p>The passengers thanked the <input data-q="12" class="question-input" placeholder="(12) ........................................"/> for saving their lives but unfortunately they lost their <input data-q="13" class="question-input" placeholder="(13) ........................................"/>.</p>
+            </div>
+          </div>
+        `
+      },
+      2: {
+        title: "SECTION 2",
+        audio: "",
+        html: `
+          <h3 class="text-2xl font-semibold mb-4">Questions 14-23</h3>
+          <p class="text-gray-600 mb-6">Complete the notes below. Write <strong>NO MORE THAN THREE WORDS AND/OR A NUMBER</strong> for each answer.</p>
+          <div class="notebook mx-auto max-w-3xl p-10 mb-10">
+            <h4 class="text-xl font-bold mb-6 text-center underline">Course Requirements</h4>
+            <div class="space-y-8 text-lg">
+              <p>Tutorial paper: A piece of work on a given topic. Students must:</p>
+              <p>• <input data-q="14" class="question-input" placeholder="(14) ........................................"/> for 25 minutes</p>
+              <p>• <input data-q="15" class="question-input" placeholder="(15) ........................................"/></p>
+              <p>• give to lecturer for marking</p>
+              <p>Essay topic: Usually <input data-q="16" class="question-input" placeholder="(16) ........................................"/></p>
+              <p>Type of exam: <input data-q="17" class="question-input" placeholder="(17) ........................................"/></p>
+              <p>Library: Important books are in <input data-q="18" class="question-input" placeholder="(18) ........................................"/>.</p>
+              <p>Focus of course: Focus on <input data-q="19" class="question-input" placeholder="(19) ........................................"/>.</p>
+            </div>
+          </div>
+          <div class="notebook mx-auto max-w-3xl p-10">
+            <h4 class="text-xl font-bold mb-6 text-center underline">First Semester Subjects</h4>
+            <div class="space-y-8 text-lg">
+              <p>The subjects taken in the first semester are psychology, sociology, <input data-q="20" class="question-input" placeholder="(20) ........................................"/> and <input data-q="21" class="question-input" placeholder="(21) ........................................"/>.</p>
+              <p>Students may have problems with <input data-q="22" class="question-input" placeholder="(22) ........................................"/> and <input data-q="23" class="question-input" placeholder="(23) ........................................"/>.</p>
+            </div>
+          </div>
+        `
+      },
+      3: {
+        title: "SECTION 3",
+        audio: "",
+        html: `
+          <h3 class="text-2xl font-semibold mb-4">Questions 24-30</h3>
+          <p class="text-gray-600 mb-6">Complete the form and notes below. Write <strong>NO MORE THAN THREE WORDS AND/OR A NUMBER</strong> for each answer.</p>
+          <div class="bg-gray-50 p-6 rounded-lg border border-gray-300 max-w-2xl mx-auto mb-10">
+            <h4 class="font-bold text-lg mb-4 text-center">INSURANCE APPLICATION FORM</h4>
+            <div class="space-y-6 text-lg">
+              <div>Name: Mr Gavin <input data-q="24" class="question-input" placeholder="(24) ........................................"/></div>
+              <div>Address: <input data-q="25" class="question-input" placeholder="(25)"/> Biggins Street</div>
+              <div><input data-q="26" class="question-input" placeholder="(26) ........................................"/></div>
+              <div>Date of Birth: 12th November</div>
+              <div>Telephone: Home 98724555</div>
+              <div>Nationality: <input data-q="27" class="question-input" placeholder="(27) ........................................"/></div>
+            </div>
+          </div>
+          <div class="notebook mx-auto max-w-3xl p-10">
+            <h4 class="text-xl font-bold mb-6 text-center underline">Residence Rules</h4>
+            <div class="space-y-6 text-lg">
+              <p>• No noise after 9 pm.</p>
+              <p>• Smoking only allowed on <input data-q="28" class="question-input" placeholder="(28) ........................................"/>.</p>
+              <p>• No changes can be made to <input data-q="29" class="question-input" placeholder="(29) ........................................"/>.</p>
+              <p>If you have any questions, ask the <input data-q="30" class="question-input" placeholder="(30) ........................................"/>.</p>
+            </div>
+          </div>
+        `
+      },
+      4: {
+        title: "SECTION 4",
+        audio: "",
+        html: `
+          <h3 class="text-2xl font-semibold mb-4">Questions 31-40</h3>
+          <p class="text-gray-600 mb-6">Complete the notes below. Write <strong>NO MORE THAN THREE WORDS AND/OR A NUMBER</strong> for each answer.</p>
+          <div class="notebook mx-auto max-w-3xl p-10">
+            <h4 class="text-xl font-bold mb-6 text-center underline">LIBRARY INFORMATION</h4>
+            <div class="space-y-6 text-lg">
+              <p>For registration, must take:</p>
+              <p>• two <input data-q="31" class="question-input" placeholder="(31) ........................................"/> and</p>
+              <p>• two forms of I.D. e.g. driving licence, <input data-q="32" class="question-input" placeholder="(32) ........................................"/>.</p>
+              <p>Cost to join per year (without current student card): 3 £<input data-q="33" class="question-input" placeholder="(33) ........................................"/></p>
+              <p>Number of items allowed: (members of public) 4 <input data-q="34" class="question-input" placeholder="(34) ........................................"/></p>
+              <p>Loan times: <input data-q="35" class="question-input" placeholder="(35) ........................................"/></p>
+              <p>Fines start at 5 £</p>
+              <p>Computers can be booked up to 6 <input data-q="36" class="question-input" placeholder="(36) ........................................"/> hours in advance</p>
+              <p>Library holds most national papers, all 7 <input data-q="37" class="question-input" placeholder="(37) ........................................"/>, and magazines</p>
+              <p>Need 8 <input data-q="38" class="question-input" placeholder="(38) ........................................"/> to use photocopier</p>
+              <p class="mt-6 font-semibold">Creative Writing class</p>
+              <p>• tutor is John 9 <input data-q="39" class="question-input" placeholder="(39) ........................................"/></p>
+              <p>• held on 10 <input data-q="40" class="question-input" placeholder="(40) ........................................"/> evenings</p>
+            </div>
+          </div>
+        `
+      }
+    };
+
+    const correct = {
+      "1": "prescott", "2": "41", "3": "fountain", "4": "752239", "5": "65",
+      "6": "250 million", "7": "roads", "8": "too late", "9": "school children", "10": "3",
+      "11": "boats", "12": "pilot", "13": "musical instrument",
+      "14": "talk", "15": "write up work", "16": "can choose", "17": "open book",
+      "18": "closed reserved", "19": "vocational subjects", "20": "history", "21": "economics",
+      "22": "meeting deadline", "23": "attendance",
+      "24": "murray", "25": "16c", "26": "south hills", "27": "english",
+      "28": "balconies", "29": "meal times", "30": "floor senior",
+      "31": "passport photos", "32": "bank statement", "33": "125",
+      "34": "8", "35": "1.50", "36": "48", "37": "local papers",
+      "38": "card", "39": "grantingham", "40": "friday"
+    };
+
+    function applyFeedback() {
+      const content = document.getElementById("section-content");
+      const inputs = content.querySelectorAll('.question-input');
+      inputs.forEach(input => {
+        const q = input.dataset.q;
+        if (!q) return;
+        const userAns = (answers[q] || "").toLowerCase().trim();
+        const corr = (correct[q] || "").toLowerCase().trim();
+
+        let fb = input.nextElementSibling;
+        if (fb && fb.classList.contains('feedback')) fb.remove();
+
+        const span = document.createElement('span');
+        span.className = 'feedback';
+
+        if (userAns === "") {
+          span.innerHTML = '❌';
+          input.style.borderColor = '#ef4444';
+        } else if (corr && (userAns === corr || userAns.includes(corr) || corr.includes(userAns))) {
+          span.innerHTML = '✅';
+          input.style.borderColor = '#10b981';
+        } else {
+          span.innerHTML = '❌';
+          input.style.borderColor = '#ef4444';
+        }
+
+        input.parentNode.appendChild(span);
+        input.readOnly = true;
+      });
+    }
+
+    function nextSection() {
+      if (currentSection < 4) {
+        applyFeedback();
+        setTimeout(() => {
+          switchSection(currentSection + 1);
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }, 1000);
+      }
+    }
+
+    function submitTest() {
+      let score = 0;
+      for (let q in answers) {
+        const userAns = answers[q].toLowerCase().trim();
+        const corr = (correct[q] || "").toLowerCase().trim();
+        if (corr && (userAns === corr || userAns.includes(corr) || corr.includes(userAns))) score++;
+      }
+      const band = (score * 0.225).toFixed(1);
+
+      document.getElementById("test-page").classList.add("hidden");
+      document.getElementById("results-page").classList.remove("hidden");
+      document.getElementById("result-student-name").textContent = currentUser?.name || "Student";
+      document.getElementById("result-score").textContent = `${score}/40`;
+      document.getElementById("result-band").textContent = `Band ${band}`;
+      document.getElementById("result-date").textContent = new Date().toLocaleString('en-PK', { timeZone: 'Asia/Karachi' });
+    }
+
+    function handleLogin() {
+      const pass = document.getElementById("password").value.trim();
+      if (pass === "student123") {
+        document.getElementById("login-page").classList.add("hidden");
+        document.getElementById("student-info-page").classList.remove("hidden");
+      } else {
+        alert("Incorrect password! Try 'student123'");
+      }
+    }
+
+    function logOut() {
+      location.reload();
+    }
+
+    function startTest() {
+      const name = document.getElementById("full-name").value.trim();
+      if (!name) return alert("Full Name is compulsory!");
+      currentUser = { name };
+      document.getElementById("student-info-page").classList.add("hidden");
+      document.getElementById("test-page").classList.remove("hidden");
+      document.getElementById("header-student-name").textContent = name;
+      document.getElementById("test-student-name").textContent = name;
+      answers = {};
+      switchSection(1);
+    }
+
+    function switchSection(section) {
+      currentSection = section;
+      for (let i = 1; i <= 4; i++) {
+        const tab = document.getElementById(`tab-${i}`);
+        if (tab) {
+          tab.classList.toggle("border-b-4", i === section);
+          tab.classList.toggle("border-blue-600", i === section);
+          tab.classList.toggle("text-blue-600", i === section);
+        }
+      }
+      const data = testData[section];
+      document.getElementById("section-content").innerHTML = `
+        <h3 class="text-2xl font-semibold mb-4">${data.title}</h3>
+        ${data.audio ? `<audio controls class="audio-player"><source src="${data.audio}" type="audio/mpeg">Your browser does not support audio.</audio>` : ''}
+        ${data.html}
+      `;
+    }
+
+    function previousSection() {
+      if (currentSection > 1) switchSection(currentSection - 1);
+    }
+
+    document.addEventListener('change', e => {
+      if (e.target.dataset.q) answers[e.target.dataset.q] = e.target.value.trim();
+    });
+  </script>
+</body>
+</html>
